@@ -1,8 +1,10 @@
-
 #ifndef ITEM_H
 #define ITEM_H
 #include <iostream> 
 #include <vector>
+#include <fstream>
+#include <sstream>
+#include <stack>
 #include <algorithm>
 using namespace std;
 
@@ -25,7 +27,6 @@ class Item{
         string getNombre() const { return nombre; }
         string getRareza() const { return rareza; }
         string getTipo() const { return tipo; }
-        void setId(int _id){ id = _id;}
         void mostrarInventario() const {
             cout << "ID:" << id << "|" << nombre << "|" << rareza << "|" << tipo << endl;
         }

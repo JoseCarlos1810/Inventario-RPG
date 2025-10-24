@@ -1,43 +1,76 @@
-# Proyecto: INVENTARIO RPG
-Este proyecto consiste en la creación de un sistema sencillo de ordenamiento de objetos de un inventario de un videojuego RPG.
-El programa permite almacenar 3 distintos ítems (armas, armaduras y pociones) junto con sus atributos principales como ID, nombre, rareza y tipo.
-Además, el usuario puede interactuar con un menú en consola para:
-- Agregar nuevos objetos al inventario.
-- Visualizar el inventario.
-- Ordenar los objetos bajo diferentes criterios: por nombre, por tipo o por rareza.
-- Salir del programa.
-Para lograr los ordenamientos se usó la función std::sort de la librería <algorithm>
+# Proyecto: Nombre de tu proyecto
+Este proyecto consiste en la creación de un sistema de inventario de un videojuego RPG que permite almacenar, visualizar, ordenar y administrar objetos de distintos tipos y rarezas.
+En este avance, se amplía el sistema para incluir la lectura de ítems desde un archivo, filtrado y selección por distintos criterios, y una pila de inventario rápido de pociones.
 
 ## Descripción del avance 1
-En este primer avance se implementó la clase Item con sus atributos y métodos básicos.
+En el primer avance se implementó la clase Item con sus atributos y métodos básicos.
 Se creó un vector de objetos Item que funciona como inventario inicial.
 El programa incluye las siguientes funcionalidades:
+
 - Mostrar el inventario en su estado original.
-- Ordenar el inventario por nombre, tipo y rareza usando std::sort
-- Agregar nuevos items al inventario    
+- Ordenar el inventario por nombre, tipo y rareza usando std::sort.
+- Agregar nuevos ítems al inventario introduciendo manualmente sus datos. 
+
+## Descripción del avance 2
+En este segundo avance, el proyecto evoluciona a un sistema más dinámico e interactivo, en el que los ítems ya no se crean manualmente, sino que se seleccionan desde un archivo externo (items.txt) que contiene todos los ítems disponibles en el juego.
+Además, se añade un inventario rápido de pociones manejado con una pila (stack), donde la última poción agregada es la primera que se puede usar.
+
+### Cambios sobre el primer avance
+1. Lectura de ítems desde archivo (items.txt)
+
+- En lugar de crear ítems manualmente desde el teclado, ahora se leen desde un archivo de texto.
+
+- Este cambio mejora la escalabilidad del programa y facilita la administración de una base de datos de ítems predefinida.
+
+2. Filtrado avanzado al agregar ítems
+
+- El usuario puede buscar ítems por tipo (Arma, Armadura, Pocion), rareza (Comun, Rara, Epica, Legendaria) o por la letra inicial del nombre.
+
+- Esto simula un sistema de búsqueda más realista dentro del inventario de un RPG.
+
+3. Implementación de una pila (stack) de inventario rápido de pociones
+
+- Las pociones se agregan automáticamente a un stack adicional.
+
+- Se puede “tomar” una poción usando la opción correspondiente del menú, la cual extrae la última agregada (LIFO).
+
+- Representa una mecánica clásica de los videojuegos donde las pociones se usan en orden inverso al que fueron obtenidas.
+
+4. Nuevo menú con más funcionalidades
+
+- Se agregan las opciones para filtrar ítems al agregarlos y para usar una poción del inventario rápido.
+
+5. Mejor manejo del historial de ítems agregados
+
+- El historial (stack<Item>) guarda el último ítem agregado y se puede consultar fácilmente.
+
+Razón de los cambios:
+Estos cambios permiten hacer el programa más modular, escalable y cercano a un entorno real de videojuego RPG, donde los ítems no se escriben manualmente sino que provienen de una base de datos predefinida y pueden ser manipulados por tipo o rareza.
 
 ## Instrucciones para compilar el avance de proyecto
 Ejecuta el siguiente comando en la terminal:
 
-`g++ main.cpp -std=c++11 -o primer_avance` 
+`g++ main.cpp -std=c++11 -o segundo_avance` 
 
 ## Instrucciones para ejecutar el avance de proyecto
 Ejecuta el siguiente comando en la terminal:
 
-`./primer_avance` 
+`./segundo_avance` 
 
 ## Descripción de las entradas del avance de proyecto
 Las entradas requeridas en el programa son las siguientes:
-- Elección del usuario del menu
-- Informacion del item a agregar
+- Archivo de texto
+- Opción elegida (1–9)
+- Filtros al buscar ítems: tipo, rareza o letra inicial
+- ID del ítem que desea agregar al inventario
 
 ## Descripción de las salidas del avance de proyecto
-El programa genera como salida distintas cosas segun la eleccion del usuario, estas puedes ser las siguientes:
-- Inventario original (predefinido en el main).
-- Inventario ordenado por nombre (alfabético).
-- Inventario ordenado por tipo (Arma → Armadura → Pocion).
-- Inventario ordenado por rareza (Comun → Rara → Epica → Legendaria).
-- Inventario actualizado cuando se agregan nuevos ítems.
+Dependiendo de la elección del usuario, el programa puede mostrar:
+- Lista completa de ítems o filtrada según el criterio de búsqueda.
+- Inventario ordenado por nombre, tipo o rareza.
+- El último ítem agregado.
+- Confirmación de que una poción ha sido usada desde el inventario rápido.
+- Mensajes de error en caso de seleccionar un ID inexistente o una opción inválida.
 
 ## Desarrollo de competencias
 
@@ -82,6 +115,62 @@ Se utilizó el algoritmo std::sort, el cual implementa introsort el cual es una 
 - Promedio: O(n²)  
 - Peor caso: O(n²) 
 
+#### Hace un análisis de complejidad correcto y completo de todas las estructuras de datos y cada uno de sus usos en el programa.
+El proyecto utiliza tres estructuras de datos principales: vector, stack, y ifstream (para la lectura de archivos).
+Cada una fue elegida según las operaciones más frecuentes del sistema y su complejidad temporal.
+
+**Vector**
+- Se utiliza para almacenar el inventario principal de ítems.
+- Permite acceso directo a cualquier elemento mediante índices (O(1)).
+- La inserción al final del vector (push_back) tiene complejidad O(1) amortizada.
+- El recorrido o búsqueda secuencial es O(n), adecuado para listas pequeñas.
+- Permite usar std::sort directamente sobre su contenido, optimizando los procesos de ordenamiento.
+##### Complejidad:
+- Mejor caso: O(1)
+- Caso promedio: O(n)
+- Peor caso: O(n log n)
+
+**Stack**
+- Se utiliza para el historial de ítems agregados y para las pociones rápidas.
+- Implementa el comportamiento LIFO.
+- Todas sus operaciones (push, pop, top) tienen complejidad constante O(1).
+- Es ideal para modelar el historial y el uso rápido de pociones, ya que el último elemento agregado es el primero que se usa o consulta.
+Razón de elección:
+Se eligió stack en lugar de otras estructuras como queue o doublelinkedlist debido a la naturaleza de las acciones del juego.
+El inventario rápido debe permitir usar la última poción agregada de inmediato, lo cual representa perfectamente el principio LIFO.
+Una queue no respetaría este comportamiento, y una list implicaría un mayor uso de memoria y tiempos de acceso más altos sin beneficio adicional.
+Por ello, stack es la opción más eficiente y semánticamente correcta para este tipo de operación.
+
+**Analisis de complejidad de las operaciones realizadas con la pila**
+
+#### Agregar (push):
+Inserta un nuevo elemento en la parte superior de la pila.
+##### Complejidad:
+- Mejor caso: O(1)
+- Caso promedio: O(1)
+- Peor caso: O(1)
+
+#### Eliminar (pop):
+Elimina el elemento superior de la pila.
+##### Complejidad:
+- Mejor caso: O(1)
+- Caso promedio: O(1)
+- Peor caso: O(1)
+
+#### Consultar el último elemento (top):
+Permite acceder al elemento superior sin eliminarlo.
+##### Complejidad:
+- Mejor caso: O(1)
+- Caso promedio: O(1)
+- Peor caso: O(1)
+
+#### Búsqueda completa:
+Buscar un elemento específico recorriendo toda la pila (aunque no se neceesita en este programa).
+##### Complejidad:
+- Mejor caso: O(1)
+- Caso promedio: O(n)
+- Peor caso: O(n)
+
 ### SICT0302: Toma decisiones
 #### Selecciona un algoritmo de ordenamiento adecuado al problema y lo usa correctamente.
 Creo yo que la decisión de usar std::sort fue adecuada debido a que es fácil de implementar y es eficiente tanto en memoria como en tiempo ya que cambia segun la situación como se describe a continuación:
@@ -97,3 +186,41 @@ Creo yo que la decisión de usar std::sort fue adecuada debido a que es fácil d
 - Heapsort asegura que nunca se degrade la complejidad a O(n²), manteniendo un límite máximo de O(n log n) en el peor caso.  
 - Combinando estas estrategias, std::sort ofrece un rendimiento eficiente y robusto en prácticamente todos los escenarios posibles, lo que simplifica el diseño del programa y evita tener que implementar manualmente varios algoritmos de ordenamiento.
 
+#### Selecciona una estructura de datos adecuada al problema y la usa correctamente.
+Creo yo que la decisión de usar las estructuras vector, stack y ifstream fue la más adecuada para el desarrollo de este sistema de inventario RPG.
+Cada una cumple una función específica que mejora el rendimiento general del programa y facilita su mantenimiento.
+Además, todas aprovechan al máximo la biblioteca estándar de C++, lo que garantiza eficiencia, portabilidad y facilidad de implementación.
+
+**Eficiencia en memoria**
+- El uso de vector permite almacenar los ítems del inventario de manera continua en memoria, lo que mejora la localidad espacial y reduce el uso de punteros adicionales.
+A diferencia de otras estructuras como list, no requiere nodos separados ni enlaces, lo que ahorra memoria y permite un acceso más rápido.
+- La estructura stack, basada internamente en un contenedor secuencial (como deque o vector), también gestiona sus elementos de forma compacta y eficiente.
+Esto permite que las operaciones push y pop se realicen directamente sin necesidad de reasignar grandes bloques de memoria.
+- Ifstream permite mantener los datos del inventario base en un archivo de texto externo, evitando ocupar memoria del programa con todos los ítems posibles durante la ejecución.
+De esta forma, solo se cargan los datos necesarios cuando el jugador decide agregar un nuevo ítem, optimizando el uso total de recursos.
+
+**Eficiencia en tiempo**
+- El vector fue elegido por su velocidad al realizar operaciones de inserción y recorrido secuencial.
+Las inserciones al final tienen una complejidad de O(1) y la búsqueda directa por índice es inmediata, lo que lo hace ideal para un inventario que se modifica constantemente.
+- El stack fue seleccionado porque sus operaciones (push, pop, top) tienen una complejidad constante O(1) en todos los casos.
+Esto lo convierte en la opción perfecta para el historial de ítems agregados y para el inventario rápido de pociones, donde se requiere acceder al último elemento de forma inmediata.
+Elegir una queue o una list habría sido menos eficiente para estas tareas, ya que no siguen el patrón de acceso LIFO que se necesita en este contexto.
+- El uso de ifstream para leer los ítems desde archivo es eficiente porque realiza la lectura de manera secuencial (O(n)) y solo una vez durante la carga inicial.
+Esto simplifica el mantenimiento, permite agregar nuevos objetos sin cambiar el código y mantiene un rendimiento estable sin sobrecargar el programa con estructuras innecesarias en memoria.
+
+### SICT0303: Implementa acciones científicas
+#### Implementa mecanismos para consultar información de las estructras correctos.
+Considero que desarrollé esta competencia al implementar distintas funciones que permiten consultar, filtrar y mostrar información del inventario de manera eficiente y organizada.
+El programa utiliza vectores para almacenar los ítems y, sobre ellos, se aplican diferentes algoritmos y funciones para obtener datos específicos según las necesidades del usuario.
+- Por ejemplo, se implementaron funciones como buscarItem() para localizar un ítem por su nombre, y menús interactivos que permiten ordenar el inventario por nombre, tipo o rareza utilizando el algoritmo std::sort().
+Esto demuestra un uso correcto de las estructuras de datos, ya que se aprovechan las ventajas de acceso secuencial y de ordenamiento que ofrece el vector, sin necesidad de estructuras más complejas o menos eficientes.
+- Además, se agregó la función verUltimoAgregado(), que utiliza un stack para consultar el último ítem insertado en el historial.
+Esto refleja la aplicación adecuada del concepto de consulta dentro de una pila, ya que solo el elemento más reciente puede ser visualizado o retirado, tal como ocurre en un historial o una acción rápida dentro de un juego RPG.
+
+#### Implementa mecanismos de lectura de archivos para cargar datos a las estructuras de manera correcta.
+En esta parte del proyecto, la competencia se desarrolló mediante la creación de un sistema de lectura de archivos con ifstream, encargado de cargar todos los ítems posibles desde un archivo externo (items.txt).
+Este archivo contiene una lista completa de objetos con sus atributos (ID, nombre, tipo y rareza), y el programa los carga en un vector de objetos Item cuando es necesario agregar un Item al inventario.
+El proceso de lectura se implementó de forma secuencial y controlada, validando que cada línea del archivo contenga los datos correctos antes de almacenarlos.
+De esta manera, se garantiza que las estructuras de datos del programa siempre contengan información válida y coherente con el formato del archivo.
+Además, se incluyeron opciones de filtrado para que el usuario pueda buscar ítems por tipo, por rareza o por la letra inicial del nombre, aprovechando los datos cargados desde el archivo.
+Esto demuestra una correcta integración entre la lectura de archivos y las estructuras de datos, ya que la información externa se utiliza de forma dinámica dentro del programa sin necesidad de reescribir o recompilar el código.
