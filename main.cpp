@@ -1,4 +1,27 @@
 #include "Item.h"
+#include <cstdlib>
+#include <ctime>
+
+void guardarInventario(const vector<Item>& inventario, const string& nombreArchivo) {
+    // Complejidad:
+    // Mejor caso: O(n)
+    // Promedio: O(n)
+    // Peor caso: O(n)
+    ofstream archivo(nombreArchivo);
+    if (!archivo.is_open()) {
+        cout << "Error: No se pudo abrir el archivo para guardar el inventario.\n";
+        return;
+    }
+
+    for (const auto& it : inventario) {
+        archivo << it.getId() << " "
+                << it.getNombre() << " "
+                << it.getRareza() << " "
+                << it.getTipo() << "\n";
+    }
+    archivo.close();
+    cout << "Inventario guardado correctamente en " << nombreArchivo << ".\n";
+}
 
 vector<Item> cargarTodosLosItems(const string& nombreArchivo) {
     // Complejidad:
@@ -88,11 +111,15 @@ void tomarPocion(stack<Item>& pocionesRapidas, vector<Item>& inventario) {
 }
 
 int ordenarRareza(const string& rareza) {
-  if (rareza == "Comun") return 0;
-  if (rareza == "Rara") return 1;
-  if (rareza == "Epica") return 2;
-  if (rareza == "Legendaria") return 3;
-  return 9999;
+    // Complejidad:
+    // Mejor caso: O(1)
+    // Promedio: O(1)
+    // Peor caso: O(1)
+    if (rareza == "Comun") return 0;
+    if (rareza == "Rara") return 1;
+    if (rareza == "Epica") return 2;
+    if (rareza == "Legendaria") return 3;
+    return 9999;
 }
 
 int ordenarTipo(const string& tipo){
@@ -104,6 +131,10 @@ int ordenarTipo(const string& tipo){
 
 
 void agregarItem(vector<Item>& inventario, stack<Item>& historial, stack<Item>& pocionesRapidas) {
+  // Complejidad:
+  // Mejor caso: O(n)
+  // Promedio: O(n)
+  // Peor caso: O(n)
   vector<Item> todosLosItems = cargarTodosLosItems("items.txt");
   if (todosLosItems.empty()) {
       cout << "No se pudo cargar la lista de ítems.\n";
@@ -192,12 +223,67 @@ void agregarItem(vector<Item>& inventario, stack<Item>& historial, stack<Item>& 
 
 }
 
+void pelear(vector<Item>& inventario, stack<Item>& historial, stack<Item>& pocionesRapidas) {
+    // Complejidad:
+    // Mejor caso: O(n)
+    // Promedio: O(n)
+    // Peor caso: O(n)
+    int eleccion;
+    cout << "\nAtaques\n";
+    cout << "1. Ataque rapido (necesitas 2 ataques)\n2. Ataque fuerte (necesitas 1 ataque)\nElige tu tipo de ataque: ";
+    cin >> eleccion;
+
+    vector<Item> todos = cargarTodosLosItems("items.txt");
+    if (todos.empty()) { 
+        cout << "No hay items para recompensa.\n"; 
+        return; 
+    }
+
+    bool victoria = false;
+    if (eleccion == 1) {
+        int ataque1 = rand() % 100;
+        int ataque2 = rand() % 100;
+        if (ataque1 < 75 && ataque2 < 75) {
+            victoria = true;
+        }
+    } else {
+        int ataque = rand() % 100;
+        if (ataque < 50) {
+            victoria = true;
+        }
+    }
+
+    if (victoria) {
+        cout << "\nHas derrotado al enemigo\n";
+
+        int indice = rand() % todos.size();
+        Item recompensa = todos[indice];
+
+        cout << "Has obtenido el item de recompensa:\n";
+        recompensa.mostrarInventario();
+
+        inventario.push_back(recompensa);
+        historial.push(recompensa);
+        if (recompensa.getTipo() == "Pocion") pocionesRapidas.push(recompensa);
+    } else {
+        cout << "\nHas sido derrotado. No obtienes ninguna recompensa.\n";
+    }
+}
+
 void imprimirInventario(vector<Item>& inventario){
+  // Complejidad:
+  // Mejor caso: O(n) 
+  // Promedio: O(n)
+  // Peor caso: O(n)
   cout << "\n";
   for (const auto& it : inventario) it.mostrarInventario();
 }
 
 void menu(){
+    // Complejidad
+    // Mejor caso: O(1)
+    // Promedio: O(1)
+    // Peor caso: O(1)
   cout << "\nMENU INVENTARIO\n";
   cout << "1. Agregar objeto al inventario\n";
   cout << "2. Ver inventario\n";
@@ -207,10 +293,15 @@ void menu(){
   cout << "6. Buscar item por nombre\n";
   cout << "7. Ver ultimo item agregado\n";
   cout << "8. Tomar una pocion del inventario rapido\n";
-  cout << "9. Salir\n";
+  cout << "9. Pelear con un enemigo\n";
+  cout << "10. Salir y guardar inventario\n";
 }
 
 void eleccion(vector<Item>& inventario, stack<Item>& historial, stack<Item>& pocionesRapidas){
+  // Complejidad:
+  // Mejor caso: O(1)
+  // Promedio: O(n log n)
+  // Peor caso: O(N^2)
   bool continuar=true;
   int op;
   int cal;
@@ -267,11 +358,17 @@ void eleccion(vector<Item>& inventario, stack<Item>& historial, stack<Item>& poc
           verUltimoAgregado(historial);
       }
       else if (op == 8) {
-            tomarPocion(pocionesRapidas, inventario);
+          tomarPocion(pocionesRapidas, inventario);
         }
       else if (op == 9) {
-          cout << "Adios!\n";
-          continuar = false;
+          pelear(inventario, historial, pocionesRapidas);
+      }
+      else if (op == 10) {
+          cout << "Guardando inventario antes de salir...\n";
+          guardarInventario(inventario, "inventario_guardado.txt");
+          cout << "Adios!\n"; 
+          continuar = false; 
+          break;
       }
       else{
           cout<<"La opcion no es valida"<<endl;
@@ -280,20 +377,31 @@ void eleccion(vector<Item>& inventario, stack<Item>& historial, stack<Item>& poc
 }
 
 int main(){
-  vector<Item> inventario = {
-    Item(1001, "Espada_de_Hierro", "Comun", "Arma"),
-    Item(1026, "Armadura_de_Hierro", "Rara", "Armadura"),
-    Item(1049, "Pocion_HP_Basica", "Comun", "Pocion")
-  };
+    // Complejidad:
+    // Mejor caso: O(1)
+    // Promedio: O(n log n)
+    // Peor caso: O(N^2)
+    srand(time(0));
 
-  stack<Item> historial;
-  stack<Item> pocionesRapidas;
+    vector<Item> inventario = cargarTodosLosItems("inventario_guardado.txt");
+    stack<Item> historial;
+    stack<Item> pocionesRapidas;
 
-  for (auto& item : inventario) {
+    for (auto& item : inventario) {
         if (item.getTipo() == "Pocion") pocionesRapidas.push(item);
     }
 
-  eleccion(inventario, historial, pocionesRapidas);
+    if (inventario.empty()) {
+        inventario = {
+            Item(1001, "Espada_de_Hierro", "Comun", "Arma"),
+            Item(1026, "Armadura_de_Hierro", "Rara", "Armadura"),
+            Item(1049, "Pocion_HP_Basica", "Comun", "Pocion")
+        };
+        for (auto& item : inventario) {
+            if (item.getTipo() == "Pocion") pocionesRapidas.push(item);
+        }
+    }
 
-  return 0;
+    eleccion(inventario, historial, pocionesRapidas);
+    return 0;
 }

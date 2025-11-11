@@ -28,6 +28,7 @@ class Item{
         string getRareza() const { return rareza; }
         string getTipo() const { return tipo; }
         void mostrarInventario() const {
+            // Complejidad: O(1)
             cout << "ID:" << id << "|" << nombre << "|" << rareza << "|" << tipo << endl;
         }
 };

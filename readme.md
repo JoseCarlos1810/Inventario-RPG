@@ -1,6 +1,6 @@
 # Proyecto: Nombre de tu proyecto
-Este proyecto consiste en la creación de un sistema de inventario de un videojuego RPG que permite almacenar, visualizar, ordenar y administrar objetos de distintos tipos y rarezas.
-En este avance, se amplía el sistema para incluir la lectura de ítems desde un archivo, filtrado y selección por distintos criterios, y una pila de inventario rápido de pociones.
+Este proyecto consiste en la creación de un sistema de inventario para un videojuego RPG que permite almacenar, visualizar, ordenar y administrar objetos de distintos tipos y rarezas.
+En este avance se amplía la funcionalidad del sistema para incluir mecánicas de combate con recompensas aleatorias, manejo de historial de objetos agregados, uso de pociones desde una pila de acceso rápido y guardado automático del inventario en un archivo externo.
 
 ## Descripción del avance 1
 En el primer avance se implementó la clase Item con sus atributos y métodos básicos.
@@ -9,11 +9,11 @@ El programa incluye las siguientes funcionalidades:
 
 - Mostrar el inventario en su estado original.
 - Ordenar el inventario por nombre, tipo y rareza usando std::sort.
-- Agregar nuevos ítems al inventario introduciendo manualmente sus datos. 
+- Agregar nuevos ítems al inventario introduciendo manualmente sus datos.
 
 ## Descripción del avance 2
-En este segundo avance, el proyecto evoluciona a un sistema más dinámico e interactivo, en el que los ítems ya no se crean manualmente, sino que se seleccionan desde un archivo externo (items.txt) que contiene todos los ítems disponibles en el juego.
-Además, se añade un inventario rápido de pociones manejado con una pila (stack), donde la última poción agregada es la primera que se puede usar.
+En el segundo avance, el proyecto evolucionó a un sistema más dinámico e interactivo, en el que los ítems ya no se crean manualmente, sino que se seleccionan desde un archivo externo (items.txt) que contiene todos los ítems disponibles en el juego.
+Además, se añadio un inventario rápido de pociones manejado con una pila (stack), donde la última poción agregada es la primera que se puede usar.
 
 ### Cambios sobre el primer avance
 1. Lectura de ítems desde archivo (items.txt)
@@ -47,15 +47,34 @@ Además, se añade un inventario rápido de pociones manejado con una pila (stac
 Razón de los cambios:
 Estos cambios permiten hacer el programa más modular, escalable y cercano a un entorno real de videojuego RPG, donde los ítems no se escriben manualmente sino que provienen de una base de datos predefinida y pueden ser manipulados por tipo o rareza.
 
+## Descripción del avance 3
+En este tercer avance se integran nuevas funcionalidades relacionadas con el combate, la gestión de recompensas y el guardado automático del progreso del jugador, casi no se cambiaron funciones del segundo avance, unicamente se agregaron funciones.
+
+El sistema ahora incluye:
+
+- Una función de pelea (pelear()) que permite al jugador realizar ataques rápidos o fuertes, donde si el jugador gana la batalla, obtiene una recompensa aleatoria seleccionada del archivo de ítems. estas recompensas se agregan automáticamente al inventario y al historial.
+- Se implementó una función de guardado automático que almacena el inventario completo en un archivo (inventario_guardado.txt) al salir del programa.
+- Con la implementación del guardado automático, ahora que carga primero el inventario guardado, si se borra el archivo de texto llamado inventario_guardado.txt se iniciara con el inventario por default
+
+### Cambios sobre el segundo avance
+1. Incorporación del sistema de combate.
+Razón: dar un propósito dinámico al inventario, simulando un entorno real de juego donde los ítems tienen valor estratégico.
+
+2. Recompensas aleatorias.
+Razón: agregar aleatoriedad y rejugabilidad al programa, usando rand() para seleccionar ítems al azar del archivo base.
+
+3. Guardado automático del inventario.
+Razón: conservar el progreso del jugador al cerrar el programa, simulando una función de “guardar partida”.
+
 ## Instrucciones para compilar el avance de proyecto
 Ejecuta el siguiente comando en la terminal:
 
-`g++ main.cpp -std=c++11 -o segundo_avance` 
+`g++ main.cpp -std=c++11 -o tercer_avance` 
 
 ## Instrucciones para ejecutar el avance de proyecto
 Ejecuta el siguiente comando en la terminal:
 
-`./segundo_avance` 
+`./tercer_avance` 
 
 ## Descripción de las entradas del avance de proyecto
 Las entradas requeridas en el programa son las siguientes:
@@ -71,6 +90,7 @@ Dependiendo de la elección del usuario, el programa puede mostrar:
 - El último ítem agregado.
 - Confirmación de que una poción ha sido usada desde el inventario rápido.
 - Mensajes de error en caso de seleccionar un ID inexistente o una opción inválida.
+- Archivo de texto con el inventario guardado
 
 ## Desarrollo de competencias
 
@@ -171,6 +191,59 @@ Buscar un elemento específico recorriendo toda la pila (aunque no se neceesita 
 - Caso promedio: O(n)
 - Peor caso: O(n)
 
+#### Hace un análisis de complejidad correcto y completo para todos los demás componentes del programa y determina la complejidad final del programa.
+Además de los algoritmos de ordenamiento y las estructuras de datos, el programa incluye varios componentes adicionales que realizan operaciones de búsqueda, filtrado, combate, manejo de archivos y guardado automático.
+A continuación se detalla el análisis de complejidad de cada uno de estos componentes:
+
+**Lectura de archivos**
+El programa utiliza ifstream para leer los ítems desde un archivo de texto.
+Cada línea del archivo contiene los datos de un ítem, que se almacenan en el vector de inventario mediante la operación push_back().
+
+##### Complejidad:
+- Mejor caso: O(1)
+- Caso promedio: O(n)
+- Peor caso: O(n)
+
+**Escritura de archivos**
+Cuando el programa termina, el inventario actualizado se guarda automáticamente en inventario_guardado.txt.
+
+##### Complejidad:
+- Mejor caso: O(1)
+- Caso promedio: O(n)
+- Peor caso: O(n)
+
+**Busqueda de items**
+Las búsquedas se realizan mediante comparación secuencial dentro del vector.
+
+##### Complejidad:
+- Mejor caso: O(1)
+- Caso promedio: O(n)
+- Peor caso: O(n)
+
+**Filtrar items**
+El programa permite filtrar ítems por tipo, rareza o letra inicial.
+
+##### Complejidad:
+- Mejor caso: O(n)
+- Caso promedio: O(n)
+- Peor caso: O(n)
+
+**Pelear con enemigos**
+La función de pelea involucra únicamente cálculos aritméticos y condicionales, sin estructuras iterativas grandes, sin embargo, para determinar la recompensa se requiere recorrer los items existentes.
+
+##### Complejidad:
+- Mejor caso: O(1)
+- Caso promedio: O(n)
+- Peor caso: O(n)
+
+**Menu principal**
+En este caso depende de la elección del usuario.
+
+#### Complejidad:
+- Mejor caso: O(1)
+- Promedio: O(n log n)
+- Peor caso: O(n log n)
+
 ### SICT0302: Toma decisiones
 #### Selecciona un algoritmo de ordenamiento adecuado al problema y lo usa correctamente.
 Creo yo que la decisión de usar std::sort fue adecuada debido a que es fácil de implementar y es eficiente tanto en memoria como en tiempo ya que cambia segun la situación como se describe a continuación:
@@ -224,3 +297,9 @@ El proceso de lectura se implementó de forma secuencial y controlada, validando
 De esta manera, se garantiza que las estructuras de datos del programa siempre contengan información válida y coherente con el formato del archivo.
 Además, se incluyeron opciones de filtrado para que el usuario pueda buscar ítems por tipo, por rareza o por la letra inicial del nombre, aprovechando los datos cargados desde el archivo.
 Esto demuestra una correcta integración entre la lectura de archivos y las estructuras de datos, ya que la información externa se utiliza de forma dinámica dentro del programa sin necesidad de reescribir o recompilar el código.
+
+### Implementa mecanismos de escritura de archivos para guardar los datos  de las estructuras de manera correcta
+Considero que desarrollé esta competencia al implementar funciones que permiten guardar el inventario del jugador en archivos externos mediante ofstream.
+El programa recorre el vector principal de ítems y escribe en inventario_guardado.txt los datos de cada objeto (ID, nombre, tipo y rareza) de forma ordenada y legible.
+Este proceso se ejecuta automáticamente al finalizar el programa o tras obtener una recompensa, asegurando que los cambios se conserven entre sesiones.
+En conjunto, este mecanismo demuestra un uso correcto de las estructuras de datos y del manejo de archivos, garantizando la persistencia y coherencia de los datos del juego, con esto creo yo que se demuestra como desarolle todas las competencias necesarias.
