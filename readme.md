@@ -1,4 +1,13 @@
-# Proyecto: Nombre de tu proyecto
+# Evidencia problemas
+
+Video problema 1: https://drive.google.com/file/d/1SM8U746mkQ9k_MjK2RnBqt4VgAaTLlbn/view?usp=sharing
+Enlace submission: https://leetcode.com/problems/largest-number/submissions/1826573723/
+Video problema 2: https://drive.google.com/file/d/16DcOTqTvW4pKn8VjhxLjtv1UdRQKbUrp/view?usp=drive_link
+Enlace submission: https://leetcode.com/problems/reverse-linked-list/submissions/1826585446/
+Video problema 3: https://drive.google.com/file/d/1MQK0AOkFJVQ7mub306-Rhs2qHl89zh9y/view?usp=sharing
+Enlace submission: https://leetcode.com/problems/minimum-depth-of-binary-tree/description/
+
+# Proyecto: Inventario RPG
 Este proyecto consiste en la creación de un sistema de inventario para un videojuego RPG que permite almacenar, visualizar, ordenar y administrar objetos de distintos tipos y rarezas.
 En este avance se amplía la funcionalidad del sistema para incluir mecánicas de combate con recompensas aleatorias, manejo de historial de objetos agregados, uso de pociones desde una pila de acceso rápido y guardado automático del inventario en un archivo externo.
 
